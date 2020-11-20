@@ -1,0 +1,131 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{natbib}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage[margin = 0.5in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{rotating}
+\usepackage{url}
+\usepackage[font=small]{caption}
+\usepackage{setspace}
+\usepackage{subfigure}
+\usepackage[dvipsnames]{xcolor}
+\setcounter{MaxMatrixCols}{10}
+\setcounter{tocdepth}{1}
+\newtheorem{theorem}{Theorem}
+\newtheorem{algorithm}{Algorithm} %[theorem]
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{exercise}{Exercise}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+
+%\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+%\newtheorem{axiom}[theorem]{Axiom}
+%\newtheorem{case}[theorem]{Case}
+%\newtheorem{claim}[theorem]{Claim}
+%\newtheorem{conclusion}[theorem]{Conclusion}
+%\newtheorem{condition}[theorem]{Condition}
+%\newtheorem{conjecture}[theorem]{Conjecture}
+%\newtheorem{criterion}[theorem]{Criterion}
+%\newtheorem{assumption}[theorem]{Assumption}
+%\newtheorem{notation}[theorem]{Notation}
+%\newtheorem{problem}[theorem]{Problem}
+%\newtheorem{solution}[theorem]{Solution}
+%\newtheorem{summary}[theorem]{Summary}
+	
+\def\N{{\mathbb N}}        % positive integers
+\def\Q{{\mathbb Q}}        % rationals
+\def\Z{{\mathbb Z}}        % integers
+\def\R{{\mathbb R}}        % reals
+\def\Rn{{\R^{n}}}          % product of n copies of reals
+\def\P{{\mathbb P}}        % probability
+\def\E{{\mathbb E}}        % expectation
+\def\EQ{{\mathbb E}^{\mathbb Q}}        % expectation
+\def\1{{\mathbf 1}}        % indicator
+\def\F{{\mathcal F}}        % potential measure
+\def\G{{\mathcal G}}        % potential measure
+\def\ess{\text{ess}}
+\def\var{{\mathop{\mathbf Var}}}    %variance
+\def\L{{\mathcal L} \,}
+\def\Lhat{{\tilde{\mathcal L} \,}}
+\def\setZ{{\mathcal Z}}
+\def\setA{{\mathcal A}}
+\def\setT{{\mathcal T}}
+\def\D{{\mathcal D}}
+\def\C{{\mathcal C}}
+\def\setE{{\mathcal E}}
+\def\Vest{{\mathcal V}}
+\def\Cvest{{C}}
+\def\Cunvest{{\tilde{C}}}
+
+\def\I{{\mathbf I}}
+\def\thetahat{{\hat{\theta}}}
+\def\taub{{\hat{\tau}}}
+\def\xhat{{\hat{x}}}
+\def\xbar{{\bar{x}}}
+\def\yhat{{\hat{y}}}
+\def\x{{\textcolor[rgb]{0.00,0.00,0.00}{\hat{x}}}}
+\def\y{{\textcolor[rgb]{0.00,0.00,0.00}{\hat{y}}}}
+\def\v{{\hat{v}}}
+\def\Xhat{{\hat{X}}}
+\def\G{{\tilde{G}}}
+\def\H{{\tilde{H}}}
+\def\Yhat{{\hat{Y}}}
+\def\Vhat{{\hat{V}}}
+\def\Mhat{{\hat{M}}}
+
+%\addtolength{\hoffset}{-1.8cm} \addtolength{\voffset}{-2cm}
+%\addtolength{\textheight}{4cm} \addtolength{\textwidth}{3.6cm}
+
+\newcommand{\ward}[1]{\textcolor{red}{#1}}
+
+\numberwithin{theorem}{section}
+\numberwithin{equation}{section}
+\numberwithin{remark}{section}
+\numberwithin{definition}{section}
+\numberwithin{theorem}{section}
+\numberwithin{lemma}{section}
+\numberwithin{example}{section}
+
+\begin{document}
+\title{Liquidity in the Options Market: A Machine Learning Perspective}
+\author{Brian Ward\thanks{Email: {bmw2150@columbia.edu}. Corresponding author. }} 
+\maketitle
+\abstract{We explore the liquidity in the options market.}
+
+\tableofcontents
+
+\newpage
+
+\setcounter{section}{0}
+
+\section{Introduction}
+There are many well-known strategies that utilize index options. In paritcular, there is the well-known volatility risk premium that attempts to harvest the fact that options are typically overpriced relative to historical volatility. 
+
+Our purpose here is not to explore such strategies. Instead we are focused on the scalability of them in the SPX options market. In particular, we seek to understand the drivers of liquidity metrics in the options market. 
+
+Whether or not you can apply machine learning in the financial industry is a somewhat hotly debated topic. The reason for that is the users of machine learning often try to forecast future stock returns and that in and of itself is difficult, regardless of the researcher's choice of a machine learning model or a simple linear model. Thus, using machine learning can easily lead one to overfit the return forecasts and the out-of-sample viability of the model is called into question. On the other hand, liquidity metrics are somewhat persistent and have intuitive reasons to be linked to some predictor variables. For example, in equities trading, around earnings announcements, there is a pronounced spike in volume. An intuitive explanation for that is investment managers who rank companies based on earnings per share will have to rebalance their holdings in order to meet their target holdings based on the strategy. In a similar way, variables like marketwide events, changes in macroeconomic variables, etc. all have an intuitive reason to be linked to something like volume: they all could generate a change in an investment manager's signal and thus, cause them to trade. 
+
+However, the exact form of the relationship is unclear. Moreover, the non-linear interactions between these variables are completely unknown, but one could certainly argue for their existence at an intuitive level. In other words, there clearly exist rules relating the input predictors to the output variable, but seems incredibly difficult to actually write down those rules. It is in this setting where machine learning appears to shine strongest. On the other hand, there is still the potential to overfit the relationship by using an overly complicated model. That is why we prefer to apply machine learning when the datasets are massive. As we show, daily options data for even a single underlying over 20 years leads to a dataset of millions of datapoints. It is the confluence of this massive dataset combined with the fact that there should be rules governing the traded volume in options that justifies our approach in this paper. 
+
+\section{Data Overview}
+
+
+\section{Basic Relationships}
+Univariate relationships between liquidity. Decile plots of average/median volume by buckets of some sorting variables. 
+
+\section{Machine Learning Model}
+
+
+\section{Conclusion}
+
+
+\end{document}
